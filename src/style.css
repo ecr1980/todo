@@ -1,0 +1,13 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+.new-list-div {
+  padding-left: 20px;
+}
+
+.form-div {
+  background-color: white;
+  color: black;
+}
