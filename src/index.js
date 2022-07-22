@@ -195,9 +195,7 @@ class ToDoForm {
 
 }
 
-const mainList = document.getElementById('main-list');
-let mainListDisplay = new ToDoList(mainList);
-mainListDisplay.showList;
+
 
 
 
@@ -261,3 +259,9 @@ function removeDiv(removedDiv) {
 
 
 
+const mainList = document.getElementById('main-list');
+let todaysDate = new Date().toLocaleDateString()
+let topBar = document.getElementById('top-bar')
+topBar.innerText = todaysDate
+let mainListDisplay = new ToDoList(mainList);
+mainListDisplay.showList;
