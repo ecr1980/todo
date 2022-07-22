@@ -12,7 +12,6 @@ class ToDoList {
     this.ownDiv = ownDIv;
     this.newListContainer = document.createElement('div')
     this.listDepth = listDepth;
-    console.log(this.listDepth)
   }
 
   addItem(item) {
@@ -93,9 +92,6 @@ class ToDoItem {
     this.title = title;
     this.description = description;
     this.priority = priority;
-    console.log('new list constructor')
-    console.log(listDepth)
-    console.log('new list constructor')
     this.itemList = new ToDoList(parentItem.newListContainer, (listDepth + 1));
     this.finished = false;
     this.itemDiv = this.itemList.ownDIv
