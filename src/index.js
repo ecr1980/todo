@@ -21,14 +21,12 @@ class ToDoList {
     const newListDiv = document.createElement('div')
     const titleDiv = document.createElement('div')
     const descriptionDiv = document.createElement('div')
-    const finishedDiv = document.createElement('div')
-    const newList = thisList.itemsList
+    const newList = thisList.itemList
 
     newListDiv.setAttribute('class', 'new-list-div')
 
     newListDiv.appendChild(titleDiv)
     newListDiv.appendChild(descriptionDiv)
-    newListDiv.appendChild(finishedDiv)
     newListDiv.appendChild(this.newListContainer)
     newList.showList
 
@@ -58,11 +56,11 @@ class ToDoList {
       this.sortList();
       for (let i = 0; i < this.itemList.length; i++) {
         let itemDiv = document.createElement('div');
+        let newCheckBox = makeFinishedCheckBox(i);
         itemDiv = this.makeListADiv(this.itemList[i]);
+        itemDiv.appendChild(newCheckBox)
         listDiv.appendChild(itemDiv);
-        console.log(this.itemList[i].itemList)
         this.itemList[i].showList;
-        //listDiv.appendChild(makeTaskButton(this))
       };
     };
     listDiv.appendChild(makeTaskButton(this))
@@ -82,13 +80,29 @@ class ToDoItem {
   priority;
   finished;
   internalSteps;
-  itemsList;
+  itemList;
+  itemDiv;
 
   constructor(title, description, priority, parentItem) {
     this.title = title;
     this.description = description;
     this.priority = priority;
-    this.itemsList = new ToDoList(parentItem.newListContainer);
+    this.itemList = new ToDoList(parentItem.newListContainer);
+    this.finished = false;
+    this.itemDiv = this.itemList.ownDIv
+  }
+
+  toggleFinished(index) {
+
+    let checkChecked = document.getElementById(`finished${index}`)
+    if (checkChecked.checked === false) {
+      this.finished = true;
+      this.itemDiv.setAttribute('class', 'finished');
+    }
+    else {
+      this.finished = false;
+      this.itemDiv.classList.remove('finished');
+    }
   }
 
 }
@@ -213,6 +227,29 @@ function makeTaskButton(parentItem){
   addButton.addEventListener('click', () => {addForm(addButton, parentItem)});
   return addButton;
 }
+
+function makeFinishedCheckBox(index){
+  const addBox = document.createElement('input');
+  addBox.setAttribute('type', 'checkbox');
+  //addBox.setAttribute('onclick', `toggleFinished(${index})`);
+  addBox.addEventListener("change", () => {toggleFinished(index)})
+  addBox.setAttribute('id', `finished${index}`);
+  addBox.setAttribute('name', `finished${index}`);
+  return addBox;
+}
+
+function toggleFinished(index){
+
+  let checkChecked = document.getElementById(`finished${index}`) 
+  let parentDiv = checkChecked.parentElement;
+  if (checkChecked.checked === true) {
+    parentDiv.classList.add('finished');
+  }
+  else {
+    parentDiv.classList.remove('finished');
+  }
+}
+
 
 
 
