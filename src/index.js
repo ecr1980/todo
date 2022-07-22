@@ -5,11 +5,14 @@ class ToDoList {
   itemList;
   ownDiv;
   newListContainer;
+  listDepth;
 
-  constructor(ownDIv) {
+  constructor(ownDIv, listDepth = 0) {
     this.itemList = [];
     this.ownDiv = ownDIv;
     this.newListContainer = document.createElement('div')
+    this.listDepth = listDepth;
+    console.log(this.listDepth)
   }
 
   addItem(item) {
@@ -56,14 +59,17 @@ class ToDoList {
       this.sortList();
       for (let i = 0; i < this.itemList.length; i++) {
         let itemDiv = document.createElement('div');
-        let newCheckBox = makeFinishedCheckBox(i);
+        let newCheckBox = makeFinishedCheckBox(i, this.listDepth);
         itemDiv = this.makeListADiv(this.itemList[i]);
         itemDiv.appendChild(newCheckBox)
         listDiv.appendChild(itemDiv);
         this.itemList[i].showList;
       };
     };
-    listDiv.appendChild(makeTaskButton(this))
+    listDiv.appendChild(makeTaskButton(this, this.listDepth))
+    if (this.listDepth > 0) {
+      listDiv.appendChild(makeRemoveButton(this.ownDiv.parentElement))
+    }
     this.ownDiv.innerHTML = "";
     this.ownDiv.appendChild(listDiv);
     return listDiv;
@@ -83,26 +89,16 @@ class ToDoItem {
   itemList;
   itemDiv;
 
-  constructor(title, description, priority, parentItem) {
+  constructor(title, description, priority, parentItem, listDepth) {
     this.title = title;
     this.description = description;
     this.priority = priority;
-    this.itemList = new ToDoList(parentItem.newListContainer);
+    console.log('new list constructor')
+    console.log(listDepth)
+    console.log('new list constructor')
+    this.itemList = new ToDoList(parentItem.newListContainer, (listDepth + 1));
     this.finished = false;
     this.itemDiv = this.itemList.ownDIv
-  }
-
-  toggleFinished(index) {
-
-    let checkChecked = document.getElementById(`finished${index}`)
-    if (checkChecked.checked === false) {
-      this.finished = true;
-      this.itemDiv.setAttribute('class', 'finished');
-    }
-    else {
-      this.finished = false;
-      this.itemDiv.classList.remove('finished');
-    }
   }
 
 }
@@ -113,28 +109,30 @@ class ToDoForm {
   title;
   description;
   priority;
+  listDepth;
 
-  constructor(parentItem) {
+  constructor(parentItem, listDepth) {
     this.parentItem = parentItem;
     this.title = this.titleForm();
     this.description = this.descriptionForm();
     this.priority = this.priorityForm();
-    let button = this.makeButton();
+    this.listDepth = listDepth;
+    let addButton = this.makeButton();
 
     this.formDiv = document.createElement('div');
     this.formDiv.setAttribute('class', 'form-div');
     this.formDiv.appendChild(this.title);
     this.formDiv.appendChild(this.description);
     this.formDiv.appendChild(this.priority)
-    this.formDiv.appendChild(button);
+    this.formDiv.appendChild(addButton);
 
-    button.addEventListener('click', () => {
+    addButton.addEventListener('click', () => {
       this.addItemToButton();
     });
   }
 
   addItemToButton() { 
-    const newItem = new ToDoItem(this.title.lastChild.value, this.description.lastChild.value, this.priority.lastChild.value, this.parentItem)
+    const newItem = new ToDoItem(this.title.lastChild.value, this.description.lastChild.value, this.priority.lastChild.value, this.parentItem, this.listDepth)
     this.parentItem.addItem(newItem)
     this.parentItem.showList;
   };
@@ -207,40 +205,50 @@ mainListDisplay.showList;
 
 
 
-function addForm(addButton, parentItem){
+function addForm(addButton, parentItem, listDepth){
   const parentElement = addButton.parentElement;
   const newDiv = document.createElement('div');
-  const testForm = new ToDoForm(parentItem);
+  const testForm = new ToDoForm(parentItem, listDepth);
+  let removeButton = makeRemoveButton(newDiv);
   newDiv.setAttribute('class', 'new-div');
 
   parentElement.appendChild(newDiv);
+  newDiv.appendChild(removeButton);
   
   newDiv.appendChild(testForm.div);
 }
 
 
-function makeTaskButton(parentItem){
+function makeRemoveButton(removedDiv){
+  const addButton = document.createElement('button')
+  addButton.setAttribute('class', 'remove-element')
+  addButton.setAttribute('id', 'remove-element')
+  addButton.innerText = "Cancel"
+  addButton.addEventListener('click', () => {removeDiv(removedDiv)});
+  return addButton;
+}
+
+function makeTaskButton(parentItem, listDepth){
   const addButton = document.createElement('button')
   addButton.setAttribute('class', 'show-add-form')
   addButton.setAttribute('id', 'show-add-form')
   addButton.innerText = "Add Task"
-  addButton.addEventListener('click', () => {addForm(addButton, parentItem)});
+  addButton.addEventListener('click', () => {addForm(addButton, parentItem, listDepth)});
   return addButton;
 }
 
-function makeFinishedCheckBox(index){
+function makeFinishedCheckBox(index, listDepth){
   const addBox = document.createElement('input');
   addBox.setAttribute('type', 'checkbox');
-  //addBox.setAttribute('onclick', `toggleFinished(${index})`);
-  addBox.addEventListener("change", () => {toggleFinished(index)})
-  addBox.setAttribute('id', `finished${index}`);
-  addBox.setAttribute('name', `finished${index}`);
+  addBox.addEventListener("change", () => {toggleFinished(index, listDepth)})
+  addBox.setAttribute('id', `finished-${index}-${listDepth}`);
+  addBox.setAttribute('name', `finished-${index}-${listDepth}`);
   return addBox;
 }
 
-function toggleFinished(index){
+function toggleFinished(index, listDepth){
 
-  let checkChecked = document.getElementById(`finished${index}`) 
+  let checkChecked = document.getElementById(`finished-${index}-${listDepth}`) 
   let parentDiv = checkChecked.parentElement;
   if (checkChecked.checked === true) {
     parentDiv.classList.add('finished');
@@ -250,6 +258,10 @@ function toggleFinished(index){
   }
 }
 
+function removeDiv(removedDiv) {
+  let parantDiv = removedDiv.parentElement;
+  parantDiv.removeChild(removedDiv)
+}
 
 
 
