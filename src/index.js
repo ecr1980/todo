@@ -6,12 +6,16 @@ class ToDoList {
   ownDiv;
   newListContainer;
   listDepth;
+  ownerList;
+  ownerItem;
 
-  constructor(ownDIv, listDepth = 0) {
+  constructor(ownDIv, listDepth = 0, ownerList = null, ownerItem = null) {
     this.itemList = [];
     this.ownDiv = ownDIv;
     this.newListContainer = document.createElement('div')
     this.listDepth = listDepth;
+    this.ownerList = ownerList;
+    this.ownerItem = ownerItem;
   }
 
   addItem(item) {
@@ -39,8 +43,8 @@ class ToDoList {
   }
 
   removeItem(item) {
-    let newItemList = this.itemList.splice(item);
-    this.itemList = newItemList;
+    this.itemList.splice(item,1);
+    this.showList
   }
 
   sortList() {
@@ -62,13 +66,11 @@ class ToDoList {
         itemDiv = this.makeListADiv(this.itemList[i]);
         itemDiv.appendChild(newCheckBox)
         listDiv.appendChild(itemDiv);
+        listDiv.appendChild(makeRemoveButton(this.ownDiv.parentElement, this, i))        
         this.itemList[i].showList;
       };
     };
     listDiv.appendChild(makeTaskButton(this, this.listDepth))
-    if (this.listDepth > 0) {
-      listDiv.appendChild(makeRemoveButton(this.ownDiv.parentElement))
-    }
     this.ownDiv.innerHTML = "";
     this.ownDiv.appendChild(listDiv);
     return listDiv;
@@ -92,7 +94,7 @@ class ToDoItem {
     this.title = title;
     this.description = description;
     this.priority = priority;
-    this.itemList = new ToDoList(parentItem.newListContainer, (listDepth + 1));
+    this.itemList = new ToDoList(parentItem.newListContainer, (listDepth + 1), parentItem, this);
     this.finished = false;
     this.itemDiv = this.itemList.ownDIv
   }
@@ -213,12 +215,17 @@ function addForm(addButton, parentItem, listDepth){
 }
 
 
-function makeRemoveButton(removedDiv){
+function makeRemoveButton(removedDiv, ownerList = null, index = null){
   const addButton = document.createElement('button')
   addButton.setAttribute('class', 'remove-element')
   addButton.setAttribute('id', 'remove-element')
   addButton.innerText = "Cancel"
-  addButton.addEventListener('click', () => {removeDiv(removedDiv)});
+  addButton.addEventListener('click', () => {
+    removeDiv(removedDiv)
+    if (ownerList != null) {
+      ownerList.removeItem(index);
+    }
+  });
   return addButton;
 }
 
@@ -253,15 +260,17 @@ function toggleFinished(index, listDepth){
 }
 
 function removeDiv(removedDiv) {
-  let parantDiv = removedDiv.parentElement;
-  parantDiv.removeChild(removedDiv)
+  if (removedDiv != (document.getElementById('content'))){
+    let parantDiv = removedDiv.parentElement;
+    parantDiv.removeChild(removedDiv)
+  }
 }
 
 
 
 const mainList = document.getElementById('main-list');
 let todaysDate = new Date().toLocaleDateString()
-let topBar = document.getElementById('top-bar')
-topBar.innerText = todaysDate
+let topBarDate = document.getElementById('top-bar-date')
+topBarDate.innerText = todaysDate
 let mainListDisplay = new ToDoList(mainList);
 mainListDisplay.showList;

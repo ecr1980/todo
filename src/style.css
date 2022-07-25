@@ -1,6 +1,16 @@
 body {
   background-color: black;
   color: white;
+  position: relative;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+}
+
+.content-window {
+  background-color:aqua;
 }
 
 .new-list-div {
@@ -16,4 +26,21 @@ body {
   background-color: gray;
   color: black;
   text-decoration: line-through;
+}
+
+.main-list {
+  border-style: dashed;
+  border-color: red;
+}
+
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  align-content: space-between;
+  border-style: solid;
+  border-color: white;
+}
+
+.top-bar-date {
+  padding-left: 20px;
 }
