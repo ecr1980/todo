@@ -23,14 +23,14 @@ class ToDoList {
     this.showList;
   }
 
-  makeListADiv(thisList) {
+  makeListADiv(thisList, i, depth) {
     const newListDiv = document.createElement('div')
     const titleDiv = document.createElement('div')
     const descriptionDiv = document.createElement('div')
     const newList = thisList.itemList
 
-    newListDiv.setAttribute('class', 'new-list-div')
-
+    newListDiv.setAttribute('class', `new-list-div`)
+    newListDiv.setAttribute('id', `new-list-div-${i}-depth${depth}`)
     newListDiv.appendChild(titleDiv)
     newListDiv.appendChild(descriptionDiv)
     newListDiv.appendChild(this.newListContainer)
@@ -44,7 +44,7 @@ class ToDoList {
 
   removeItem(item) {
     this.itemList.splice(item,1);
-    this.showList
+    //this.showList
   }
 
   sortList() {
@@ -55,6 +55,7 @@ class ToDoList {
 
   get showList(){
     let listDiv = document.createElement('div')
+    listDiv.setAttribute('class', 'item-box')
     if (this.itemList.length === 0) {
       listDiv.innerHTML = ''
     }
@@ -63,10 +64,10 @@ class ToDoList {
       for (let i = 0; i < this.itemList.length; i++) {
         let itemDiv = document.createElement('div');
         let newCheckBox = makeFinishedCheckBox(i, this.listDepth);
-        itemDiv = this.makeListADiv(this.itemList[i]);
+        itemDiv = this.makeListADiv(this.itemList[i], i, this.listDepth);
         itemDiv.appendChild(newCheckBox)
-        listDiv.appendChild(itemDiv);
-        listDiv.appendChild(makeRemoveButton(this.ownDiv.parentElement, this, i))        
+        itemDiv.appendChild(makeRemoveButton(this.ownDiv.parentElement, this, i))
+        listDiv.appendChild(itemDiv);       
         this.itemList[i].showList;
       };
     };
