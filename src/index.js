@@ -2,82 +2,18 @@ import './style.css';
 
 class ToDoList {
 
-  itemList;
-  ownDiv;
-  newListContainer;
+  items;
   listDepth;
-  ownerList;
-  ownerItem;
 
-  constructor(ownDIv, listDepth = 0, ownerList = null, ownerItem = null) {
-    this.itemList = [];
-    this.ownDiv = ownDIv;
-    this.newListContainer = document.createElement('div')
+  constructor(listDepth = 0) {
+    this.items = [];
     this.listDepth = listDepth;
-    this.ownerList = ownerList;
-    this.ownerItem = ownerItem;
   }
 
   addItem(item) {
-    this.itemList.push(item)
-    this.showList;
+    this.items.push(item)
   }
-
-  makeListADiv(thisList, i, depth) {
-    const newListDiv = document.createElement('div')
-    const titleDiv = document.createElement('div')
-    const descriptionDiv = document.createElement('div')
-    const newList = thisList.itemList
-
-    newListDiv.setAttribute('class', `new-list-div`)
-    newListDiv.setAttribute('id', `new-list-div-${i}-depth${depth}`)
-    newListDiv.appendChild(titleDiv)
-    newListDiv.appendChild(descriptionDiv)
-    newListDiv.appendChild(this.newListContainer)
-    newList.showList
-
-    titleDiv.innerText = thisList.title
-    descriptionDiv.innerText = thisList.description
-
-    return newListDiv;
-  }
-
-  removeItem(item) {
-    this.itemList.splice(item,1);
-    //this.showList
-  }
-
-  sortList() {
-    this.itemList.sort((a,b) => {
-      return a.priority - b.priority;
-    });
-  }
-
-  get showList(){
-    let listDiv = document.createElement('div')
-    listDiv.setAttribute('class', 'item-box')
-    if (this.itemList.length === 0) {
-      listDiv.innerHTML = ''
-    }
-    else {
-      this.sortList();
-      for (let i = 0; i < this.itemList.length; i++) {
-        let itemDiv = document.createElement('div');
-        let newCheckBox = makeFinishedCheckBox(i, this.listDepth);
-        itemDiv = this.makeListADiv(this.itemList[i], i, this.listDepth);
-        itemDiv.appendChild(newCheckBox)
-        itemDiv.appendChild(makeRemoveButton(this.ownDiv.parentElement, this, i))
-        listDiv.appendChild(itemDiv);       
-        this.itemList[i].showList;
-      };
-    };
-    listDiv.appendChild(makeTaskButton(this, this.listDepth))
-    this.ownDiv.innerHTML = "";
-    this.ownDiv.appendChild(listDiv);
-    return listDiv;
-  };
-
-  
+ 
 }
 
 
@@ -87,22 +23,20 @@ class ToDoItem {
   description;
   priority;
   finished;
-  internalSteps;
   itemList;
-  itemDiv;
 
-  constructor(title, description, priority, parentItem, listDepth) {
+  constructor(title = "test", description = "test", priority = 1, listDepth) {
     this.title = title;
     this.description = description;
     this.priority = priority;
-    this.itemList = new ToDoList(parentItem.newListContainer, (listDepth + 1), parentItem, this);
+    this.itemList = new ToDoList((listDepth + 1));
     this.finished = false;
     this.itemDiv = this.itemList.ownDIv
   }
 
 }
 
-class ToDoForm {
+/*class ToDoForm {
 
   parentItem;
   title;
@@ -267,11 +201,27 @@ function removeDiv(removedDiv) {
   }
 }
 
+*/
 
-
-const mainList = document.getElementById('main-list');
+/*const mainList = document.getElementById('main-list');
 let todaysDate = new Date().toLocaleDateString()
 let topBarDate = document.getElementById('top-bar-date')
 topBarDate.innerText = todaysDate
 let mainListDisplay = new ToDoList(mainList);
-mainListDisplay.showList;
+mainListDisplay.showList; */
+
+let top = new ToDoList;
+let topItem1 = new ToDoItem;
+let topItem2 = new ToDoItem;
+let bottomItem1 = new ToDoItem;
+let bottomItem2 = new ToDoItem;
+console.log(top.items);
+top.addItem(topItem1);
+top.addItem(topItem2);
+console.log(topItem1.itemList.items);
+topItem1.itemList.addItem(bottomItem1);
+topItem2.itemList.addItem(bottomItem2);
+console.log(topItem1.itemList.items);
+console.log(topItem2.itemList.items);
+console.log(top.items)
+
