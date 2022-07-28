@@ -6,11 +6,11 @@ body {
 
 .content {
   display: grid;
-  grid-template-columns: 1fr 6fr;
+  grid-template-columns: 240px 1fr;
 }
 
 .content-window {
-  background-color:aqua;
+  background-color:rgb(216, 216, 216);
 }
 
 .new-list-div {
@@ -29,16 +29,31 @@ body {
 }
 
 .main-list {
-  border-style: dashed;
-  border-color: red;
+background-color: black;
+display: grid;
+gap: 5px;
+height: 90vh;
+grid-auto-rows: max-content;
+}
+
+.main-list-item {
+  border-style: solid;
+  border-width: 2px;
+  border-color:  rgb(116, 116, 116) rgb(116, 116, 116) rgb(46, 46, 46) rgb(46, 46, 46);
+  background-color: rgb(56, 55, 55);
+  height: 30px;
+  width: 200px;
+  display: grid;
+  align-items: center;
+  justify-content: start;
+  padding-left: 20px;
 }
 
 .top-bar {
   display: flex;
   flex-direction: row;
   align-content: space-between;
-  border-style: solid;
-  border-color: white;
+
 }
 
 .top-bar-date {
