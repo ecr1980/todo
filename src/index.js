@@ -13,6 +13,10 @@ class ToDoList {
   addItem(item) {
     this.items.push(item)
   }
+
+  getLength() {
+    return this.items.length;
+  }
  
 }
 
@@ -24,14 +28,18 @@ class ToDoItem {
   priority;
   finished;
   itemList;
+  dueDate;
+  notes;
 
-  constructor(title = "test", description = "test", priority = 1, listDepth) {
+  constructor(title = "test", description = "test", priority = 1, listDepth, dueDate = "January 1st, 2023", notes) {
     this.title = title;
     this.description = description;
     this.priority = priority;
     this.itemList = new ToDoList((listDepth + 1));
     this.finished = false;
     this.itemDiv = this.itemList.ownDIv
+    this.dueDate = dueDate
+    this.notes = notes
   }
 
 }
@@ -210,18 +218,69 @@ topBarDate.innerText = todaysDate
 let mainListDisplay = new ToDoList(mainList);
 mainListDisplay.showList; */
 
-let top = new ToDoList;
-let topItem1 = new ToDoItem;
-let topItem2 = new ToDoItem;
+let mainList = new ToDoList;
+
+
+
+
+function displayList(itemList) {
+  if ((itemList.items.length === 0) && (itemList.listDepth === 0)) {
+    displayInstructions();
+  }
+  else {
+    let containerName = 'main-list';
+    if (itemList.listDepth > 0) {
+      console.log('hi')
+      containerName = 'content-tasks';
+    }
+    let container = document.getElementById(containerName);
+    for (let i = 0; i < itemList.items.length; i++){
+      let newButton = document.createElement('button')
+      newButton.setAttribute('class', `${containerName}-item`)
+      newButton.setAttribute('id', `${containerName}-item-${i}`)
+      newButton.innerText = itemList.items[i].title;
+      newButton.addEventListener("click", function() {
+        displayItem(itemList.items[i]);
+      })
+      container.appendChild(newButton);
+    }
+  }
+}
+
+function displayItem(item) {
+  document.getElementById('title').innerText = item.title;
+  document.getElementById('description').innerText = item.description;
+  document.getElementById('priority').innerText = `Priority: ${item.priority}`;
+  document.getElementById('due-date').innerText = item.dueDate;
+  document.getElementById('notes').innerText = item.notes;
+}
+
+
+
+// The following code is only to create a test list
+let notes1 = "There is a lot of dust on the floor.";
+let notes2 = "It's amazing how quickly a stove can get dirty after cooking 400 gallons of spaghetti sauce. Next year, perhaps you should plant fewer tomatos.";
+let notes3 = "Use cedar. It looks nice, it's relatively inexpensive, and it is naturally resistant to the elements."
+let notes4 = "The pond should be complete by now. Surely some ducks have flown in? If not, do a lot of quacking and they'll come."
+let topItem1 = new ToDoItem("Sweep Floor", "Get broom and sweep the floor.", 1, 0, "January 1st, 2023", notes1);
+let topItem2 = new ToDoItem("Clean Kitchen", "The kitchen needs to have the stove cleaned.", 2, 0, "March 23rd, 2023", notes2);
+let topItem3 = new ToDoItem("Build Deck", "Now that the old patio is gone, it's time for a new wooden deck.", 3, 0, "August 19th, 2022", notes3);
+let topItem4 = new ToDoItem("Feed the ducks", "Remember not to give them bread, it isn't good for them.", 5, 0, "September 7th, 2074", notes4);
 let bottomItem1 = new ToDoItem;
 let bottomItem2 = new ToDoItem;
-console.log(top.items);
-top.addItem(topItem1);
-top.addItem(topItem2);
-console.log(topItem1.itemList.items);
+//console.log(mainList.items);
+mainList.addItem(topItem1);
+mainList.addItem(topItem2);
+mainList.addItem(topItem3);
+mainList.addItem(topItem4);
+//console.log(topItem1.itemList.items);
 topItem1.itemList.addItem(bottomItem1);
 topItem2.itemList.addItem(bottomItem2);
-console.log(topItem1.itemList.items);
-console.log(topItem2.itemList.items);
-console.log(top.items)
+//console.log(topItem1.itemList.items);
+//console.log(topItem2.itemList.items);
+//console.log(mainList.items)
 
+
+// Thus ends the test code. Anything after this line should be considered potential production code.
+
+displayList(mainList);
