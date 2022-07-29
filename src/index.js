@@ -4,10 +4,13 @@ class ToDoList {
 
   items;
   listDepth;
+  parentItem;
 
-  constructor(listDepth = 0) {
+  constructor(listDepth = 0, parentItem = null, parentArray = []) {
     this.items = [];
     this.listDepth = listDepth;
+    this.parentItem = parentItem;
+    this.parentArray = parentArray;
   }
 
   addItem(item) {
@@ -26,20 +29,37 @@ class ToDoItem {
   title;
   description;
   priority;
-  finished;
+  complete;
   itemList;
   dueDate;
   notes;
+  parentItem;
+  parentArray;
 
-  constructor(title = "test", description = "test", priority = 1, listDepth, dueDate = "January 1st, 2023", notes) {
+  constructor(title = "test", description = "test", priority = 1, listDepth, dueDate = "January 1st, 2023", notes, parentItem, parentArray = []) {
     this.title = title;
     this.description = description;
     this.priority = priority;
-    this.itemList = new ToDoList((listDepth + 1));
-    this.finished = false;
+    this.itemList = new ToDoList((listDepth + 1), this, parentArray);
+    this.complete = false;
     this.itemDiv = this.itemList.ownDIv
     this.dueDate = dueDate
     this.notes = notes
+    this.parentItem = parentItem;
+    this.parentArray = parentArray;
+    this.parentArray.push(parentItem);
+  }
+
+  toggleComplete() {
+    console.log('toggle complete called')
+    if (this.complete === false) {
+      this.complete = true;
+      console.log('set true')
+    }
+    else {
+      this.complete = false;
+      console.log('set false')
+    }
   }
 
 }
@@ -219,24 +239,46 @@ let mainListDisplay = new ToDoList(mainList);
 mainListDisplay.showList; */
 
 let mainList = new ToDoList;
+let defaultItem = new ToDoItem();
+let currentItem = defaultItem;
 
+//This button toggles item complete status and sends item to another function to add or remove strike-through from the display text accordingly.
+document.getElementById('complete-button').addEventListener('click', function() {
+  console.log("clicked")
+  currentItem.toggleComplete();
+  checkCompleteForDisplay(currentItem);
+})
 
+//This function adds or removes strikethrough text decoration from the display element depending on if the item is complete or not.
+function checkCompleteForDisplay(item) {
+  let display = document.getElementById('display')
+  if (item.complete === true) {
+    display.classList.add('complete');
+  }
+  else {
+    display.classList.remove('complete')
+  }
+}
 
-
-function displayList(itemList) {
+//This function displays the list as buttons with each item's title at the top left of the screen, or on the right of the display element
+//if they are sub-tasks.
+function displayList(itemList, topLevelList = true) {
   if ((itemList.items.length === 0) && (itemList.listDepth === 0)) {
     displayInstructions();
   }
   else {
     let containerName = 'main-list';
-    if (itemList.listDepth > 0) {
-      console.log('hi')
+    if (topLevelList === false) {
       containerName = 'content-tasks';
     }
     let container = document.getElementById(containerName);
+    container.innerHTML = ""
     for (let i = 0; i < itemList.items.length; i++){
       let newButton = document.createElement('button')
       newButton.setAttribute('class', `${containerName}-item`)
+      if (itemList.items[i].complete === true) {
+        newButton.classList.add('complete')
+      }
       newButton.setAttribute('id', `${containerName}-item-${i}`)
       newButton.innerText = itemList.items[i].title;
       newButton.addEventListener("click", function() {
@@ -248,12 +290,50 @@ function displayList(itemList) {
 }
 
 function displayItem(item) {
+  hideParents();
+  currentItem = item;
+  checkCompleteForDisplay(item)
   document.getElementById('title').innerText = item.title;
   document.getElementById('description').innerText = item.description;
   document.getElementById('priority').innerText = `Priority: ${item.priority}`;
   document.getElementById('due-date').innerText = item.dueDate;
   document.getElementById('notes').innerText = item.notes;
+  displayList(item.itemList, false)
+  if (item.parentArray[0] != undefined) {
+    displayParents(item)
+  }
+  console.log(item.parentArray)
 }
+
+function displayParents(item) {
+  console.log(item.parentArray)
+  for (let i = 0; i < item.parentArray.length; i++) {
+    let parentDiv = document.getElementById(`parent-div-${i}`);
+    parentDiv.innerText = item.parentArray[i].title;
+    parentDiv.style.visibility = 'visible';
+  }
+}
+
+function hideParents() {
+  for (let i = 0; i < 5; i++){
+    let parentDiv = document.getElementById(`parent-div-${i}`);
+    parentDiv.style.visibility = 'hidden';
+  }
+}
+
+function setParentButtons() {
+  for (let i = 0; i < 5; i++) {
+    let parentDiv = document.getElementById(`parent-div-${i}`);
+    parentDiv.addEventListener('click', function(){
+      if (currentItem.parentArray.length >= i) {
+        if (currentItem.parentArray[i] != undefined) {
+          displayItem(currentItem.parentArray[i])
+        }
+      }
+    })
+  }
+}
+
 
 
 
@@ -266,8 +346,8 @@ let topItem1 = new ToDoItem("Sweep Floor", "Get broom and sweep the floor.", 1, 
 let topItem2 = new ToDoItem("Clean Kitchen", "The kitchen needs to have the stove cleaned.", 2, 0, "March 23rd, 2023", notes2);
 let topItem3 = new ToDoItem("Build Deck", "Now that the old patio is gone, it's time for a new wooden deck.", 3, 0, "August 19th, 2022", notes3);
 let topItem4 = new ToDoItem("Feed the ducks", "Remember not to give them bread, it isn't good for them.", 5, 0, "September 7th, 2074", notes4);
-let bottomItem1 = new ToDoItem;
-let bottomItem2 = new ToDoItem;
+let bottomItem1 = new ToDoItem("test", "test", 1, 1, "January 5, 2043", "test notes only", topItem1);
+let bottomItem2 = new ToDoItem("test", "test", 1, 1, "January 5, 2043", "test notes only", topItem2);;
 //console.log(mainList.items);
 mainList.addItem(topItem1);
 mainList.addItem(topItem2);
@@ -282,5 +362,5 @@ topItem2.itemList.addItem(bottomItem2);
 
 
 // Thus ends the test code. Anything after this line should be considered potential production code.
-
+setParentButtons();
 displayList(mainList);

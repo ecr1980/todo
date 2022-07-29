@@ -20,38 +20,35 @@
       </div>
       <div class="content-window">
         <div class="parent-divs">
-          <div class="parent-div" id="parent-div-1">Parent 1</div>
-          <div class="parent-div" id="parent-div-2">Parent 2</div>
-          <div class="parent-div" id="parent-div-3">Parent 3</div>
-          <div class="parent-div" id="parent-div-4">Parent 4</div>
-          <div class="parent-div" id="parent-div-5">Parent 5</div>
+          <strong><div class="parent-div" id="parent-div-0">Parent 1</div></strong>
+          <strong><div class="parent-div" id="parent-div-1">Parent 2</div></strong>
+          <strong><div class="parent-div" id="parent-div-2">Parent 3</div></strong>
+          <strong><div class="parent-div" id="parent-div-3">Parent 4</div></strong>
+          <strong><div class="parent-div" id="parent-div-4">Parent 5</div></strong>
         </div>
-        <div class="display">
-          <div class="due-date" id="due-date">Due on Monday, July 31st, 2022</div>
-          <div class="priority" id="priority">Priority: 3</div>
+        <div class="display" id="display">
+          <div class="due-date" id="due-date">Your due date would be here.</div>
+          <div class="priority" id="priority">Your priority here.</div>
           <div class="information">
-            <h2><div class="title" id="title">Test Title</div></h2>
-            <h3><div class="description" id="description">Test Description</div></h3>
-            <div class="notes" id="notes">This is where the specific notes for this To Do item would go. It needs to be a decently large box so that
-              anything that needs to go into it can. A scroll bar would be nice if this gets too long, but we'll cross that bridge when we
-              get there.</div>
+            <h2><div class="title" id="title">Your title here</div></h2>
+            <h3><div class="description" id="description">Your description here</div></h3>
+            <div class="notes" id="notes">Welcome to the To Do List. Go ahead and add a project with the project button at the top right of the screen.
+              If you already have some projects, click on the one you wish to work on, they are listed at the top left of the screen! And you can always
+              go back a level clicking the x at the top right of this box, or, click on a parent item above to go directly to that task! You can also use
+              the edit button below to edit the task you are currently viewing, the "add task" button to add sub tasks, and the "complete?" button to mark
+              that task complete. Go ahead and give that "complete" button a try and see what happens. Any completed task will have all of its text crossed
+              out to help you keep track of what is or isn't completed!
+            </div>
           </div>
           <div class="content-buttons">
             <button class="back"> x </button>
-            <div class="content-tasks">
-              <div class="up-button"></div>
-              <button class="content-tasks-item">test task</button>
-              <button class="content-tasks-item">test task</button>
-              <button class="content-tasks-item">test task</button>
-              <button class="content-tasks-item">test task</button>
-              <button class="content-tasks-item">test task</button>
-              <div class="down-button"></div>
+            <div class="content-tasks" id="content-tasks">
             </div>
           </div>
           <div class="content-buttons">
             <button class="edit-button">edit</button>
             <button class="add-task">add task</button>
-            <input type="checkbox" class="complete-checkbox" id="complete-checkbox" name="complete-checkbox"><label for="complete-checkbox">Complete?</label>
+            <button class="complete-button" id="complete-button" name="complete-button">Complete?</button>
           </div>
         </div>
       </div>

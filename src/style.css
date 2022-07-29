@@ -10,10 +10,15 @@ body {
   right: 10px;
 }
 
+.complete {
+  text-decoration: line-through;
+}
+
 .content {
   display: grid;
   grid-template-columns: 240px 1fr;
 }
+
 
 .content-window {
   background-color:rgb(206, 206, 206);
@@ -120,6 +125,17 @@ grid-auto-rows: max-content;
 .content-tasks {
   display: grid;
   gap: 5px;
+  width: 200px;
+}
+
+.parent-div {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.parent-div:active {
+  background-color: lightgray;
 }
 
 .title, .description {
